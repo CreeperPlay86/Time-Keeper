@@ -28,10 +28,11 @@ public class EnemyAI : MonoBehaviour
     {
         print("÷≈À‹ Õ¿…ƒ≈Õ¿");
 
-        GameObject player = PlayerController.instance.GetComponent<GameObject>();
+        GameObject player = PlayerController.instance.gameObject;
 
         if(player != null)
         {
+            print("S");
             target = player.transform;
         }
     }

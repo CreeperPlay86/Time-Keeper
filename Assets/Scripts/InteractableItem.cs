@@ -9,13 +9,10 @@ public class InteractableItem : MonoBehaviour
     public float timer = 30f;
     public float TimerRestart = 30f;
     public Text TimerText;
+    public bool interactActive = false;
+    public GameObject mark;
 
-    public GameObject ObjectA;
-    public GameObject subObjectA;
-    public GameObject ObjectB;
-    public GameObject subObjectB;
-
-    public float interactionRadius = 3f;
+	public float interactionRadius = 3f;
     public static int totalInteractionCount = 0; // Общий счетчик взаимодействий
 
     public Text interactionCountText; // Ссылка на текстовое поле
@@ -58,33 +55,25 @@ public class InteractableItem : MonoBehaviour
     void RestartTimer()
     {
         timer = TimerRestart;
+        
     }
+
+    public void SetInteract(bool newValue)
+    {
+		if (totalInteractionCount >= maxInteractions) return;
+		interactActive = newValue;
+        mark.SetActive(newValue);
+	}
 
     void Interact()
     {
-        if (totalInteractionCount >= maxInteractions) return;
-
-        if (ObjectA.activeSelf && timer <= 0)
-        {
-            RestartTimer();
-            ObjectB.SetActive(true);
-            subObjectB.SetActive(false);
-            totalInteractionCount++;
-            ObjectA.SetActive(false);
-            subObjectA.SetActive(true);
-        }
-        else if (ObjectB.activeSelf && timer <= 0)
-        {
-            RestartTimer();
-            ObjectB.SetActive(false);
-            subObjectB.SetActive(true);
-            totalInteractionCount++;
-            ObjectA.SetActive(true);
-            subObjectA.SetActive(false);
-        }
-
-        UpdateUI();
+        if (!interactActive) return;
+        RestartTimer();
+        TimerManager.instance.ActiveNext();
+		totalInteractionCount++;
+		UpdateUI();
     }
+
     void UpdateUI()
     {
         // Обновляем значение текстового поля в UI
